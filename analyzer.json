@@ -1,0 +1,136 @@
+// Config built-in analyzers and token filter
+PUT /existing_analyzer_config
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "english_stop":{
+          "type":"standard",
+          "stopwords":"_english_"
+        }
+      },
+      "filter": {
+        "my_stemmer":{
+          "type":"stemmer",
+          "name": "english"
+        }
+      }
+    }
+  }
+}
+// add text and apply
+POST /existing_analyzer_config/_analyze
+{
+  "analyzer": "english_stop",
+  "text":"I'm in the mood for drinking semi-dry red wine!"
+}
+
+POST /existing_analyzer_config/_analyze
+{
+  "tokenizer": "standard",
+  "filter": ["my_stemmer"], 
+  "text":"I'm in the mood for drinking semi-dry red wine!"
+}
+
+
+// Creating Custom analyzer
+PUT analyzer_test
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "english_stop":{
+          "type":"standard",
+          "stopwords":"_english_"
+        },
+        "my_analyzer":{
+          "type":"custom",
+          "tokenizer":"standard",
+          "char_filter":[
+            "html_strip"
+          ],
+          "filter":[
+            "lowercase",
+            "trim",
+            "my_stemmer"
+          ]
+        }
+      },
+      "filter": {
+        "my_stemmer":{
+          "type":"stemmer",
+          "name": "english"
+        }
+      }
+    }
+  }
+}
+
+POST analyzer_test/_analyze
+{
+  "analyzer": "my_analyzer",
+  "text":"I'm in the mood for drinking <strong>semi-dry</strong> red wine!"
+}
+
+// Using analyzers in mappings
+PUT analyzer_test/_mapping
+{
+  "properties":{
+    "description":{
+      "type":"text",
+      "analyzer":"my_analyzer"
+    },
+    "teaser":{
+      "type":"text",
+      "analyzer":"standard"
+    }
+  }
+}
+
+
+POST /analyzer_test/_doc/1
+{
+  "description":"drinking",
+  "teaser":"drinking"
+}
+
+GET /analyzer_test/_search
+{
+  "query":{
+    "term": {
+      "teaser": {
+        "value": "drinking"
+      }
+    }
+  }
+}
+
+
+GET /analyzer_test/_search
+{
+  "query":{
+    "term": {
+      "description": {
+        "value": "drink"
+      }
+    }
+  }
+}
+
+// Add Analyzer exist indices
+POST /analyzer_test/_close
+
+PUT /analyzer_test/_settings
+{
+
+    "analysis": {
+      "analyzer": {
+        "french_stop":{
+          "type":"standard",
+          "stopwords":"_french_"
+        }
+      }
+    }
+}
+
+POST /analyzer_test/_open

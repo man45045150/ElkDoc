@@ -1,0 +1,4 @@
+docker run --link elk:elasticsearch -p 5601:5601 --name kibana -d docker.elastic.co/kibana/kibana:7.3.0
+
+
+curl -H "Content-Type:application/json" -XPOST "http://localhost:9200/product/_bulk?pretty" --data-binary "@test-data.json"
