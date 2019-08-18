@@ -1,0 +1,165 @@
+// feilds are search with term must be keyword mapping
+// a term
+GET product/_search
+{
+  "query":{
+    "term":{
+      "is_active": {
+        "value": true
+      }
+    }
+  }
+}
+
+GET product/_search
+{
+  "query":{
+    "term":{
+      "is_active": true
+    }
+  }
+}
+
+// multi term
+// keyword exactly match
+GET product/_search
+{
+  "query":{
+    "terms":{
+      "tags.keyword": [
+        "Soup",
+        "Cake"
+      ]
+    }
+  }
+}
+// with ids
+GET product/_search
+{
+  "query":{
+    "ids":{
+      "values": [1,2,3]
+    }
+  }
+}
+
+// with Range
+GET product/_search
+{
+  "query":{
+    "range":{
+      "in_stock": {
+        "gte": 1,
+        "lte": 5
+      }
+    }
+  }
+}
+
+GET product/_search
+{
+  "query":{
+    "range":{
+      "created": {
+        "gte": "2010/01/01",
+        "lte": "2010/12/31"
+      }
+    }
+  }
+}
+
+GET product/_search
+{
+  "query":{
+    "range":{
+      "created": {
+        "gte": "01-01-2010",
+        "lte": "31-12-2010",
+        "format": "dd-MM-yyyy"
+      }
+    }
+  }
+}
+
+// Date
+
+GET product/_search
+{
+  "query":{
+    "range":{
+      "created": {
+        "gte": "01-01-2010||-1y-1d",
+        "format": "dd-MM-yyyy"
+      }
+    }
+  }
+}
+GET product/_search
+{
+  "query":{
+    "range":{
+      "created": {
+        "gte": "01-01-2010||-1y/M",
+        "format": "dd-MM-yyyy"
+      }
+    }
+  }
+}
+
+GET product/_search
+{
+  "query":{
+    "range":{
+      "created": {
+        "lte": "now/M-1y"
+      }
+    }
+  }
+}
+
+// is not null
+GET product/_search
+{
+  "query":{
+    "exists":{
+      "field": "tags"
+    }
+  }
+}
+// match prefix
+GET product/_search
+{
+  "query":{
+    "prefix":{
+      "tags.keyword": "Vege"
+    }
+  }
+}
+// wildcards
+GET product/_search
+{
+  "query":{
+    "wildcard":{
+      "tags.keyword": "Veg*ble"
+    }
+  }
+}
+// ? -> single character
+GET product/_search
+{
+  "query":{
+    "wildcard":{
+      "tags.keyword": "Veg?ble"
+    }
+  }
+}
+
+//  Regular expresion
+GET product/_search
+{
+  "query":{
+    "regexp":{
+      "tags.keyword": "Veget[a-zA-Z]+ble"
+    }
+  }
+}

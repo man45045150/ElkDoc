@@ -1,0 +1,65 @@
+// Flexible matching
+GET recipe/_search
+{
+  "query": {
+    "match": {
+      "title": "Recipes with pasta or spaghetti"
+    }
+  }
+}
+
+GET recipe/_search
+{
+  "query": {
+    "match": {
+      "title": {
+        "query":  "pasta spaghetti",
+        "operator": "and"
+      }
+    }
+  }
+}
+
+// Matching Phrases
+// use order
+GET recipe/_search
+{
+  "query": {
+    "match_phrase": {
+      "title":   "spaghetti puttanesca"
+    }
+  }
+}
+
+GET recipe/_search
+{
+  "query": {
+    "match_phrase": {
+      "title": {
+        "query":  "spaghetti puttanesca"
+      }
+    }
+  }
+}
+
+GET recipe/_search
+{
+  "query": {
+    "match_phrase": {
+      "title": {
+        "query":  "puttanesca spaghetti"
+      }
+    }
+  }
+}
+
+// Multi fields
+GET recipe/_search
+{
+  "query": {
+    "multi_match": {
+      "query":   "pasta",
+      "fields": ["title","description"]
+    }
+  }
+}

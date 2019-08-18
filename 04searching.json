@@ -1,0 +1,67 @@
+//with uri
+GET product/_search?q=*
+
+GET product/_search?q=name:Lobster
+
+GET product/_search?q=tags:Meat AND name:Tuna
+
+// with DSL
+GET product/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+//  TF/IDF -> Term Frequency/Inverse Document Frequency
+//  Okapi BM25
+GET product/_search?explain=true
+{
+  "query":{
+    "term":{
+      "name":"lobster"
+    }
+  }
+}
+
+// Debug
+GET product/_explain/1
+{
+  "query":{
+    "term":{
+      "name":"lobster"
+    }
+  }
+}
+
+// Query context vs filter context
+// Query context affect relevance score
+// Filter context doesn't
+
+// Don't pass with analyzer for query term
+GET product/_search
+{
+  "query":{
+    "term":{
+      "name":"lobster"
+    }
+  }
+}
+
+GET product/_search
+{
+  "query":{
+    "term":{
+      "name":"Lobster"
+    }
+  }
+}
+// pass with analyzer for query match
+GET product/_search
+{
+  "query":{
+    "match":{
+      "name":"Lobster"
+    }
+  }
+}
