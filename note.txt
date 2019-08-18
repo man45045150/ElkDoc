@@ -5,3 +5,9 @@ curl -H "Content-Type:application/json" -XPOST "http://localhost:9200/product/_b
 
 
 curl -H "Content-Type:application/json" -XPOST "http://localhost:9200/recipe/_bulk?pretty" --data-binary "@test-data.json"
+
+GET _cat/nodes?v
+
+GET _cat/indices?v
+
+GET _cat/health?v
