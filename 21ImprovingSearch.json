@@ -1,0 +1,10 @@
+GET /proximity/_search
+{
+    "query" :{
+        "match_phrase" : {
+            "title" :{
+                "query" : "spicy souce"
+            } 
+        }
+    }
+}
