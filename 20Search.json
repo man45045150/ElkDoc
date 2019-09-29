@@ -62,7 +62,7 @@ GET recipe/_search
 // total_pages = ceil(total_hits/page_size)
 // from = (page_size * (page_number -1))
 
-// sorting
+// sorting but ignore score
 GET recipe/_search
 {
   "_source": ["preparation_time_minutes","created"], 
@@ -77,4 +77,45 @@ GET recipe/_search
       "created": "desc"
     }
   ]
+}
+
+// sorting by multi-values fields
+GET /recipe/_search
+{
+  "_source": "ratings",
+  "query": {
+    "match_all": {
+    }
+  },
+  "sort": [
+    {
+      "ratings": {
+        "order": "desc",
+        "mode": "avg"
+      }
+    }
+  ]
+}
+
+// filter not impact score
+GET recipe/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "title": "pasta"
+          }     
+        }
+      ],
+      "filter": {
+        "range": {
+          "preparation_time_minutes": {
+            "lte": 15
+          }
+        }
+      }
+    }
+  }
 }
